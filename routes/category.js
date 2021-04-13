@@ -1,15 +1,15 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
-const Category = require("../models/Category");
-const Product = require("../models/Product");
+const Category = require('../models/Category');
+const Product = require('../models/Product');
 
 // Create category
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const categories = await Category.find({ name: req.body.name.toLowerCase() });
   if (categories.length !== 0) {
     return res.status(401).json({
-      message: "Category already exists",
+      message: 'Category already exists',
     });
   }
   const category = new Category({
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all categories
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const categories = await Category.find();
     res.status(200).json(categories);
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get products per category
-router.get("/:categoryId", async (req, res) => {
+router.get('/:categoryId', async (req, res) => {
   try {
     const products = await Product.find({ category: req.params.categoryId });
     res.status(200).json(products);

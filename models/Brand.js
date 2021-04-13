@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const brandSchema = new mongoose.Schema({
   name: {
@@ -9,9 +9,9 @@ const brandSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: true,
   },
   created_at: { type: Number, default: Date.now() },
 });
 
-module.exports = mongoose.model("Brand", brandSchema);
+module.exports = mongoose.model('Brand', brandSchema);

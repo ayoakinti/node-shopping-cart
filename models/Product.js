@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -10,56 +10,71 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    max: 255,
     min: 2,
   },
-  imageUrls: [
+  shipping: {
+    type: String,
+    required: true,
+    min: 2,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  categoryId: {
+    type: String,
+    required: true,
+  },
+  brandId: {
+    type: String,
+    required: true,
+  },
+  sellerId: {
+    type: String,
+    required: true,
+  },
+  extras: [
     {
       type: String,
       required: true,
     },
   ],
-  price: {
-    type: Number,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  brand: {
-    type: String,
-    required: true,
-  },
-  seller: {
-    type: String,
-    required: true,
-  },
-  extras: {
-    color: {
-      type: String,
-      required: true,
-    },
-    dimensions: {
-      length: {
-        type: Number,
+  priceList:
+  [
+    {
+      color: {
+        type: String,
         required: true,
       },
-      breadth: {
-        type: Number,
-        required: true,
-      },
-      height: {
-        type: Number,
-        required: true,
-      },
+      sizes: [
+        {
+          size: {
+            type: String,
+            required: true,
+          },
+          price: {
+            type: Number,
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+      imageUrls: [
+        {
+          type: String,
+          required: true,
+        },
+      ],
     },
-    weight: {
-      type: Number,
-      required: true,
-    },
-  },
+  ],
   created_at: { type: Number, default: Date.now() },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);

@@ -1,15 +1,15 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
-const Brand = require("../models/Brand");
-const Product = require("../models/Product");
+const Brand = require('../models/Brand');
+const Product = require('../models/Product');
 
 // Create brand
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const brands = await Brand.find({ name: req.body.name.toLowerCase() });
   if (brands.length !== 0) {
     return res.status(401).json({
-      message: "Brand already exists",
+      message: 'Brand already exists',
     });
   }
   const brand = new Brand({
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all brands
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const brands = await Brand.find();
     res.status(200).json(brands);
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get products per brand
-router.get("/:brandId", async (req, res) => {
+router.get('/:brandId', async (req, res) => {
   try {
     const products = await Product.find({ brand: req.params.brandId });
     res.status(200).json(products);

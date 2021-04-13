@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const sellerSchema = new mongoose.Schema({
+const buyerSchema = new mongoose.Schema({
   name: {
     firstName: {
       type: String,
@@ -25,14 +25,16 @@ const sellerSchema = new mongoose.Schema({
     max: 255,
     min: 6,
   },
-  phone: { type: Number, required: true, min: 6 },
+  phone: { type: Number, required: false, min: 6 },
   password: {
     type: String,
     required: true,
     max: 1024,
     min: 6,
   },
-  address: { type: String, required: true },
+  address: [
+    { type: String, required: false },
+  ],
   created_at: { type: Number, default: Date.now() },
   verification: {
     status: { type: Boolean, required: false, default: false },
@@ -40,4 +42,4 @@ const sellerSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Seller', sellerSchema);
+module.exports = mongoose.model('Buyer', buyerSchema);

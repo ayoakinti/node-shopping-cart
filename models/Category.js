@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -9,9 +9,9 @@ const categorySchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: true,
   },
   created_at: { type: Number, default: Date.now() },
 });
 
-module.exports = mongoose.model("Category", categorySchema);
+module.exports = mongoose.model('Category', categorySchema);
