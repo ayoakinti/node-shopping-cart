@@ -1,4 +1,6 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middlewares/verifyToken');
 
 const router = express.Router();
 const Product = require('../models/Product');
@@ -18,20 +20,22 @@ router.get('/', async (req, res) => {
 });
 
 // Add a new product
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
+  const { savedSeller } = await jwt.verify(req.token, 'secretkey');
+
   const { priceList } = req.body;
   // Get last color
-  const colorObject = priceList[priceList.length - 1];
+  const colorObject = priceList[0];
   // Get last size
   const { sizes } = colorObject;
-  const sizeObject = sizes[sizes.length - 1];
+  const sizeObject = sizes[0];
   const product = new Product({
     name: req.body.name,
     description: req.body.description,
     shipping: req.body.shipping,
     categoryId: req.body.categoryId,
     brandId: req.body.brandId,
-    sellerId: req.body.sellerId,
+    sellerId: savedSeller._id,
     extras: req.body.extras,
     image: colorObject.imageUrls[0],
     price: sizeObject.price,
@@ -49,23 +53,34 @@ router.post('/', async (req, res) => {
 });
 
 // Fetch single product
-router.get('/:productId', async (req, res) => {
+router.get('/single/:productId', async (req, res) => {
   try {
     const singleProduct = await Product.findById(req.params.productId);
-    const brandName = await Brand.findById(singleProduct.brandId);
-    const sellerName = await Seller.findById(singleProduct.sellerId);
-    const categoryName = await Category.findById(singleProduct.categoryId);
+    const brand = await Brand.findById(singleProduct.brandId);
+    const seller = await Seller.findById(singleProduct.sellerId);
+    const category = await Category.findById(singleProduct.categoryId);
     const reviews = await Review.find({ productId: req.params.productId });
     res.status(200).json({
       message: 'Product fetched successfully',
       product: singleProduct,
-      brandName,
-      sellerName,
-      categoryName,
+      brand: brand.name,
+      seller: seller.businessName,
+      category: category.name,
       reviews,
     });
   } catch (error) {
     res.status(401).json({ message: 'This product does not exit' });
+  }
+});
+
+// Get products per seller
+router.get('/seller', verifyToken, async (req, res) => {
+  const { savedSeller } = await jwt.verify(req.token, 'secretkey');
+  try {
+    const products = await Product.find({ sellerId: savedSeller._id });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(400).json({ message: err });
   }
 });
 

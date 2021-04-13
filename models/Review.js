@@ -1,20 +1,7 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-  name: {
-    firstName: {
-      type: String,
-      required: true,
-      max: 255,
-      min: 2,
-    },
-    lastName: {
-      type: String,
-      required: true,
-      max: 255,
-      min: 2,
-    },
-  },
+  user: { type: Object, required: true },
   productId: {
     type: String,
     required: true,
@@ -23,9 +10,14 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  note: {
+  remark: {
     type: String,
     required: true,
+    min: 2,
+  },
+  note: {
+    type: String,
+    required: false,
     min: 2,
   },
   created_at: { type: Number, default: Date.now() },

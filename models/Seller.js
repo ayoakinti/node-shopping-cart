@@ -32,7 +32,12 @@ const sellerSchema = new mongoose.Schema({
     max: 1024,
     min: 6,
   },
-  address: { type: String, required: true },
+  address: {
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: Number, required: true },
+  },
   created_at: { type: Number, default: Date.now() },
   verification: {
     status: { type: Boolean, required: false, default: false },

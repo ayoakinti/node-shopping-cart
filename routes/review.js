@@ -1,14 +1,34 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middlewares/verifyToken');
 
 const router = express.Router();
 const Review = require('../models/Review');
 
+// Get all reviews
+router.get('/', async (req, res) => {
+  try {
+    const reviews = await Review.find();
+    res.status(200).json(reviews);
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+});
+
 // Create review
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
+  const { savedBuyer } = await jwt.verify(req.token, 'secretkey');
+  const user = {
+    name: {
+      firstName: savedBuyer.name.firstName,
+      lastName: savedBuyer.name.lastName,
+    },
+  };
   const review = new Review({
-    name: req.body.name,
+    user,
     productId: req.body.productId,
     note: req.body.note,
+    remark: req.body.remark,
     rating: req.body.rating,
   });
   try {
@@ -16,16 +36,6 @@ router.post('/', async (req, res) => {
     res.status(200).json({
       review: savedReview,
     });
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
-});
-
-// Get all reviews
-router.get('/', async (req, res) => {
-  try {
-    const reviews = await Review.find();
-    res.status(200).json(reviews);
   } catch (err) {
     res.status(400).json({ message: err });
   }

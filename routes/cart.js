@@ -1,15 +1,19 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../middlewares/verifyToken');
 
 const router = express.Router();
 const Cart = require('../models/Cart');
 
-// Create cart
-router.post('/', async (req, res) => {
+// Add to cart
+router.post('/', verifyToken, async (req, res) => {
+  const { savedBuyer } = await jwt.verify(req.token, 'secretkey');
   const cart = new Cart({
     color: req.body.color,
     productId: req.body.productId,
     size: req.body.size,
     quantity: req.body.quantity,
+    buyerId: savedBuyer._id,
   });
   try {
     const savedCart = await cart.save();
@@ -31,8 +35,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get carts by product
-router.get('/:productId', async (req, res) => {
+// Get cart by user
+router.get('/:userId', async (req, res) => {
   try {
     const carts = await Cart.find({ productId: req.params.productId });
     res.status(200).json(carts);

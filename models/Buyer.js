@@ -15,10 +15,6 @@ const buyerSchema = new mongoose.Schema({
       min: 2,
     },
   },
-  businessName: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
@@ -33,7 +29,12 @@ const buyerSchema = new mongoose.Schema({
     min: 6,
   },
   address: [
-    { type: String, required: false },
+    {
+      street: { type: String, required: false },
+      city: { type: String, required: false },
+      state: { type: String, required: false },
+      postalCode: { type: Number, required: false },
+    },
   ],
   created_at: { type: Number, default: Date.now() },
   verification: {

@@ -1,29 +1,11 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 const router = express.Router();
 const Seller = require('../models/Seller');
-const Product = require('../models/Product');
-
-// Create seller
-router.post('/', async (req, res) => {
-  const sellers = await Seller.find({ name: req.body.name.toLowerCase() });
-  if (sellers.length !== 0) {
-    return res.status(401).json({
-      message: 'Seller already exists',
-    });
-  }
-  const seller = new Seller({
-    name: req.body.name.toLowerCase(),
-  });
-  try {
-    const savedSeller = await seller.save();
-    res.status(200).json({
-      seller: savedSeller,
-    });
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
-});
 
 // Get all sellers
 router.get('/', async (req, res) => {
@@ -35,13 +17,53 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get products per seller
-router.get('/:sellerId', async (req, res) => {
+// Register a new seller
+router.post('/', async (req, res) => {
+  const seller = await Seller.find({ email: req.body.email });
+  if (seller.length !== 0) {
+    return res.status(401).json({
+      message: 'This seller already exists',
+    });
+  }
   try {
-    const products = await Product.find({ seller: req.params.sellerId });
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(400).json({ message: err });
+    const hash = await bcrypt.hash(req.body.password, saltRounds);
+    const newSeller = new Seller({
+      name: req.body.name,
+      businessName: req.body.businessName.toLowerCase(),
+      email: req.body.email.toLowerCase(),
+      phone: req.body.phone,
+      password: hash,
+      address: req.body.address,
+    });
+    const savedSeller = await newSeller.save();
+    jwt.sign({ savedSeller }, 'secretkey', (err, token) => {
+      res.status(200).json({ seller: savedSeller, token });
+    });
+  } catch (error) {
+    res.status(401).json({ message: error });
+  }
+});
+
+// Login a seller
+router.post('/login', async (req, res) => {
+  const savedSeller = await Seller.find({ email: req.body.email });
+  if (savedSeller.length === 0) {
+    return res.status(400).json({
+      message: 'This seller doesn\'t exist',
+    });
+  }
+  try {
+    if (await bcrypt.compare(req.body.password, savedSeller[0].password)) {
+      jwt.sign({ savedSeller: savedSeller[0] }, 'secretkey', (err, token) => {
+        res.status(200).json({ seller: savedSeller, token });
+      });
+    } else {
+      res.status(401).json({
+        message: 'Invalid email/password',
+      });
+    }
+  } catch (error) {
+    res.status(401).json({ message: error });
   }
 });
 
