@@ -17,8 +17,20 @@ const cartSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
   quantity: {
     type: Number,
+    required: true,
+  },
+  sizeObject: {
+    type: Object,
     required: true,
   },
   created_at: { type: Number, default: Date.now() },

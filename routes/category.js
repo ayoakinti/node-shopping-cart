@@ -29,7 +29,9 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const categories = await Category.find();
-    res.status(200).json(categories);
+    res
+      .status(200)
+      .json({ categories, message: 'Categories fetched successfully' });
   } catch (err) {
     res.status(400).json({ message: err });
   }
@@ -39,7 +41,7 @@ router.get('/', async (req, res) => {
 router.get('/:categoryId', async (req, res) => {
   try {
     const products = await Product.find({ categoryId: req.params.categoryId });
-    res.status(200).json(products);
+    res.status(200).json({ products, message: 'Fetched Products successfully' });
   } catch (err) {
     res.status(400).json({ message: err });
   }

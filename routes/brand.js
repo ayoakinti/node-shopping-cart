@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const brands = await Brand.find();
-    res.status(200).json(brands);
+    res.status(200).json({ brands, message: 'Fetched Brands successfully' });
   } catch (err) {
     res.status(400).json({ message: err });
   }
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
 router.get('/:brandId', async (req, res) => {
   try {
     const products = await Product.find({ brandId: req.params.brandId });
-    res.status(200).json(products);
+    res.status(200).json({ products, message: 'Fetched Products successfully' });
   } catch (err) {
     res.status(400).json({ message: err });
   }

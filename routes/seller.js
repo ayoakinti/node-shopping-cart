@@ -19,8 +19,8 @@ router.get('/', async (req, res) => {
 
 // Register a new seller
 router.post('/', async (req, res) => {
-  const seller = await Seller.find({ email: req.body.email });
-  if (seller.length !== 0) {
+  const seller = await Seller.findOne({ email: req.body.email });
+  if (seller) {
     return res.status(401).json({
       message: 'This seller already exists',
     });
@@ -46,15 +46,15 @@ router.post('/', async (req, res) => {
 
 // Login a seller
 router.post('/login', async (req, res) => {
-  const savedSeller = await Seller.find({ email: req.body.email });
-  if (savedSeller.length === 0) {
+  const savedSeller = await Seller.findOne({ email: req.body.email });
+  if (!savedSeller) {
     return res.status(400).json({
       message: 'This seller doesn\'t exist',
     });
   }
   try {
-    if (await bcrypt.compare(req.body.password, savedSeller[0].password)) {
-      jwt.sign({ savedSeller: savedSeller[0] }, 'secretkey', (err, token) => {
+    if (await bcrypt.compare(req.body.password, savedSeller.password)) {
+      jwt.sign({ savedSeller }, 'secretkey', (err, token) => {
         res.status(200).json({ seller: savedSeller, token });
       });
     } else {

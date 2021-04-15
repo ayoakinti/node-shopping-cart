@@ -19,6 +19,7 @@ const brandRoute = require('./routes/brand');
 const sellerRoute = require('./routes/seller');
 const reviewRoute = require('./routes/review');
 const cartRoute = require('./routes/cart');
+const dashboardRoute = require('./routes/dashboard');
 
 // Routes middleware
 app.use('/buyer', buyerRoute);
@@ -28,6 +29,7 @@ app.use('/brand', brandRoute);
 app.use('/seller', sellerRoute);
 app.use('/review', reviewRoute);
 app.use('/cart', cartRoute);
+app.use('/dashboard', dashboardRoute);
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
