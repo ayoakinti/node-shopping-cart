@@ -7,6 +7,12 @@ const categorySchema = new mongoose.Schema({
     max: 255,
     min: 2,
   },
+  image: {
+    type: String,
+    required: true,
+    max: 255,
+    min: 2,
+  },
   active: {
     type: Boolean,
     default: true,

@@ -24,11 +24,11 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const dashboard = await Dashboard.findOne();
-    const featuredProducts = await Product.find().skip(Math.random() * 20).limit(8);
+    const featuredProducts = await Product.find().skip(Math.random() * 12).limit(8);
     const latestProducts = await Product.find().sort({ created_at: -1 }).limit(3);
     const cheapestProducts = await Product.find().sort({ price: -1 }).limit(3);
-    const bestSellingProducts = await Product.find().skip(Math.random() * 20).limit(3);
-    const featuredCategories = await Category.find().skip(Math.random() * 4).limit(2);
+    const bestSellingProducts = await Product.find().skip(Math.random() * 17).limit(3);
+    const featuredCategories = await Category.find().skip(Math.random() * 2).limit(2);
     res
       .status(200)
       .json({
