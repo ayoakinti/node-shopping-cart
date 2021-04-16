@@ -8,6 +8,11 @@ const Product = require('../models/Product');
 
 // Add to cart
 router.post('/add', verifyToken, async (req, res) => {
+  if (!req.token) {
+    return res.status(401).json({
+      message: 'Invalid Token',
+    });
+  }
   const { savedBuyer } = await jwt.verify(req.token, 'secretkey');
   let cart = await Cart.find({ buyerId: savedBuyer._id });
   const duplicateCart = cart.filter(
@@ -57,6 +62,11 @@ router.post('/add', verifyToken, async (req, res) => {
 
 // Remove from cart
 router.post('/remove', verifyToken, async (req, res) => {
+  if (!req.token) {
+    return res.status(401).json({
+      message: 'Invalid Token',
+    });
+  }
   const { savedBuyer } = await jwt.verify(req.token, 'secretkey');
   const removedCart = await Cart.findOne({
     buyerId: savedBuyer._id,
@@ -95,6 +105,11 @@ router.get('/', async (req, res) => {
 
 // Get cart by user
 router.get('/user', verifyToken, async (req, res) => {
+  if (!req.token) {
+    return res.status(401).json({
+      message: 'Invalid Token',
+    });
+  }
   const { savedBuyer } = await jwt.verify(req.token, 'secretkey');
   try {
     const cart = await Cart.find({ buyerId: savedBuyer._id });
